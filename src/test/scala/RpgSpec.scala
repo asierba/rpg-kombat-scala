@@ -9,16 +9,16 @@ class RpgSpec extends FlatSpec with Matchers {
   }
 
   def attack(attacker: Character, receiver: Character, damage: 1) = {
-    Character(health = receiver.health - damage)
+    Character(health = receiver.health - 1, level = receiver.level, isAlive = receiver.isAlive)
   }
 
-  it should "damage another character" in {
+  it should "damage another default character" in {
     val nelson = Character()
-    val juanma = Character()
+    val juanma = Character(level = 3)
 
     val damagedJuanma = attack(nelson, juanma, 1)
 
-    damagedJuanma.health should be (999)
+    damagedJuanma should be (Character(health = 999, level = 3))
   }
 }
 
