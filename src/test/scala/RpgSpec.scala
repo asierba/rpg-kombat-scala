@@ -1,16 +1,10 @@
 import org.scalatest.{FlatSpec, Matchers}
-
-case class Character(health: Int = 1000, level: Int = 1, isAlive: Boolean = true)
+import Character._
 
 class RpgSpec extends FlatSpec with Matchers {
 
   it should "create a character" in {
     Character() should equal(Character(health = 1000, level = 1, isAlive = true))
-  }
-
-  def attack(attacker: Character, receiver: Character, damage: Int) = {
-    val healthAfterDamage = if (damage > receiver.health) 0 else receiver.health - damage
-    receiver.copy(health = healthAfterDamage, isAlive = healthAfterDamage != 0)
   }
 
   it should "damage another default character" in {
@@ -38,15 +32,6 @@ class RpgSpec extends FlatSpec with Matchers {
     val damagedJuanma = attack(nelson, juanma, 1000)
 
     damagedJuanma should be(Character(health = 0, level = 3, isAlive = false))
-  }
-
-
-  def heal(from: Character, to: Character, health: Int): Character = {
-    to match {
-      case Character(x,_,_) if (x + health) > 1000 => to.copy(health = 1000)
-      case Character(_,_,true) => to.copy(health = to.health + health)
-      case _ => to
-    }
   }
 
   it should "juanma heals nelson" in {
