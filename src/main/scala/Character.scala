@@ -19,19 +19,25 @@ object Character {
     if (attacker == receiver) {
       attacker
     } else {
-      val healthAfterDamage = receiver.health match {
-        case Alive(x) => Health(x - damage)
-        case Dead()   => Dead()
-      }
-      receiver.copy(health = healthAfterDamage)
+      receiver.copy(health = recalculateHealth(receiver, damage, _ - _))
     }
   }
 
   def heal(from: Character, to: Character, health: Int): Character = {
+    if (from == to) {
+      to.copy(health = recalculateHealth(to, health, _ + _))
+    } else {
+      to
+    }
+  }
+
+  private def recalculateHealth(to: Character,
+                                health: Int,
+                                f: (Int, Int) => Int) = {
     val healthAfterHeal = to.health match {
-      case Alive(x) => Health(x + health)
+      case Alive(x) => Health(f(x, health))
       case Dead()   => Dead()
     }
-    to.copy(health = healthAfterHeal)
+    healthAfterHeal
   }
 }

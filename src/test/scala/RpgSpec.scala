@@ -34,33 +34,30 @@ class RpgSpec extends FlatSpec with Matchers {
     damagedJuanma should be(Character(health = Dead(), level = 3))
   }
 
-  it should "juanma heals nelson" in {
+  it should "juanma tries to heal nelson, but fails" in {
     val nelson = Character(health = Alive(1))
     val juanma = Character()
     val healedNelson = heal(juanma, nelson, 99)
-    healedNelson should be(Character(health = Alive(100)))
+    healedNelson should be(nelson)
   }
 
-  it should "juanma doesnt heal dead nelson" in {
-    val deadNelson = Character(health = Dead())
-    val juanma = Character()
-    val healedNelson = heal(juanma, deadNelson, 99)
-    healedNelson should be(deadNelson)
+  it should "juanma doesnt heal dead juanma" in {
+    val deadJuanma = Character(health = Dead())
+    val healedJuanma = heal(deadJuanma, deadJuanma, 99)
+    healedJuanma should be(deadJuanma)
   }
 
-  it should "when juanma tries to heal a full health nelson, nelson health does not increase" in {
-    val fullytHealthNelson = Character(health = Alive(1000))
-    val juanma = Character()
-    val healedNelson = heal(juanma, fullytHealthNelson, 1)
-    healedNelson should be(fullytHealthNelson)
+  it should "when juanma tries to heal a full health juanma, juanma's health does not increase" in {
+    val fullytHealthJuanma = Character(health = Alive(1000))
+    val healedJuanma = heal(fullytHealthJuanma, fullytHealthJuanma, 1)
+    healedJuanma should be(fullytHealthJuanma)
   }
 
-  it should "when juanma tries to heal a full health nelson, nelson health can not increase over 1000" in {
-    val nelson = Character(health = Alive(999))
-    val juanma = Character()
-    val healedNelson = heal(juanma, nelson, 2)
-    val expectedNelson = Character(health = Alive(1000))
-    healedNelson should be(expectedNelson)
+  it should "when juanma tries to heal a full health juanma, juanma's health can not increase over 1000" in {
+    val juanma = Character(health = Alive(999))
+    val healedJuanma = heal(juanma, juanma, 2)
+    val expectedJuanma = Character(health = Alive(1000))
+    healedJuanma should be(expectedJuanma)
   }
 
   it should "when juanma tries to damage himself, nothing happens" in {
@@ -69,4 +66,9 @@ class RpgSpec extends FlatSpec with Matchers {
     damagedJuanma should be(juanma)
   }
 
+  it should "when juanma tries to heal hemself, its health increases" in {
+    val juanma = Character(Alive(700))
+    val healedJuanma = heal(juanma, juanma, 10)
+    healedJuanma should be(Character(Alive(710)))
+  }
 }
