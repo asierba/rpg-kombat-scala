@@ -16,11 +16,15 @@ object Health {
 
 object Character {
   def attack(attacker: Character, receiver: Character, damage: Int) = {
-    val healthAfterDamage = receiver.health match {
-      case Alive(x) => Health(x - damage)
-      case Dead()   => Dead()
+    if (attacker == receiver) {
+      attacker
+    } else {
+      val healthAfterDamage = receiver.health match {
+        case Alive(x) => Health(x - damage)
+        case Dead()   => Dead()
+      }
+      receiver.copy(health = healthAfterDamage)
     }
-    receiver.copy(health = healthAfterDamage)
   }
 
   def heal(from: Character, to: Character, health: Int): Character = {

@@ -63,4 +63,10 @@ class RpgSpec extends FlatSpec with Matchers {
     healedNelson should be(expectedNelson)
   }
 
+  it should "when juanma tries to damage himself, nothing happens" in {
+    val juanma = Character()
+    val damagedJuanma = attack(juanma, juanma, 2)
+    damagedJuanma should be(juanma)
+  }
+
 }
