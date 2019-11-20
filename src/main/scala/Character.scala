@@ -1,11 +1,13 @@
 trait Health {}
-case class Alive(health: Int) extends Health
+
+case class Alive(health: Double) extends Health
+
 case class Dead() extends Health
 
 case class Character(health: Health = Health(1000), level: Int = 1)
 
 object Health {
-  def apply(health: Int): Health = {
+  def apply(health: Double): Health = {
     if (health > 0) {
       Alive(Math.min(health, 1000))
     } else {
@@ -19,8 +21,18 @@ object Character {
     if (attacker == receiver) {
       attacker
     } else {
-      val newDamage = if (receiver.level - attacker.level >= 5) damage/2 else damage
+      val newDamage = recalculateDamage(attacker, receiver, damage)
       receiver.copy(health = recalculateHealth(receiver, newDamage, _ - _))
+    }
+  }
+
+  private def recalculateDamage(attacker: Character, receiver: Character, damage: Int): Double = {
+    if (attacker.level - receiver.level >= 5) {
+      damage * 1.5
+    }else if (receiver.level - attacker.level >= 5) {
+      damage / 2
+    } else {
+      damage
     }
   }
 
@@ -33,11 +45,11 @@ object Character {
   }
 
   private def recalculateHealth(to: Character,
-                                health: Int,
-                                f: (Int, Int) => Int) = {
+                                health: Double,
+                                f: (Double, Double) => Double) = {
     val healthAfterHeal = to.health match {
       case Alive(x) => Health(f(x, health))
-      case Dead()   => Dead()
+      case Dead() => Dead()
     }
     healthAfterHeal
   }

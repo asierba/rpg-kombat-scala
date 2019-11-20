@@ -100,4 +100,11 @@ class RpgSpec extends FlatSpec with Matchers {
     val attackedEnrique = attack(javier, enrique, 10)
     attackedEnrique should be(Character(Alive(695), level = 27))
   }
+
+  it should "If the target is 5 levels or below the attacker, Damage is increased by 50%" in {
+    val javier = Character(Alive(1000),level = 1)
+    val enrique = Character(level = 27)
+    val attackedJavier = attack(enrique, javier, 10)
+    attackedJavier should be(Character(Alive(985), level = 1))
+  }
 }
