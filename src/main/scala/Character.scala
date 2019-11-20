@@ -19,7 +19,8 @@ object Character {
     if (attacker == receiver) {
       attacker
     } else {
-      receiver.copy(health = recalculateHealth(receiver, damage, _ - _))
+      val newDamage = if (receiver.level - attacker.level >= 5) damage/2 else damage
+      receiver.copy(health = recalculateHealth(receiver, newDamage, _ - _))
     }
   }
 

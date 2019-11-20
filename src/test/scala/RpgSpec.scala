@@ -66,9 +66,38 @@ class RpgSpec extends FlatSpec with Matchers {
     damagedJuanma should be(juanma)
   }
 
-  it should "when juanma tries to heal hemself, its health increases" in {
+  it should "when juanma tries to heal himself, its health increases" in {
     val juanma = Character(Alive(700))
     val healedJuanma = heal(juanma, juanma, 10)
     healedJuanma should be(Character(Alive(710)))
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  it should "If the target is 5 Levels above the attacker, Damage is reduced by 50%" in {
+    val javier = Character(level = 1)
+    val enrique = Character(Alive(700),level = 6)
+    val attackedEnrique = attack(javier, enrique, 10)
+    attackedEnrique should be(Character(Alive(695), level = 6))
+  }
+
+  it should "If the target is more than 5 Levels above the attacker, Damage is reduced by 50%" in {
+    val javier = Character(level = 1)
+    val enrique = Character(Alive(700),level = 27)
+    val attackedEnrique = attack(javier, enrique, 10)
+    attackedEnrique should be(Character(Alive(695), level = 27))
   }
 }
