@@ -92,4 +92,26 @@ class RpgSpec extends FlatSpec with Matchers {
     val attackedJavier = attack(enrique, javier, 10, 0)
     attackedJavier should be(MeleeCharacter(Alive(985), level = 1))
   }
+
+  it should "not damage other fighter when further than 2 meters for Melee fighters" in {
+    val melee = MeleeCharacter(Alive(10))
+    val other = MeleeCharacter()
+    val otherAttacked = attack(melee, other, 500, 3)
+    otherAttacked.health should be(Alive(1000))
+  }
+
+  it should "not damage other fighter when further than 20 meters for Range fighters" in {
+    val range = RangedCharacter(Alive(10))
+    val other = MeleeCharacter()
+    val otherAttacked = attack(range, other, 500, 21)
+    otherAttacked.health should be(Alive(1000))
+  }
+
+  it should " damage other fighter when we are in 3 meters for Range fighters" in {
+    val range = RangedCharacter(Alive(10))
+    val other = MeleeCharacter()
+    val otherAttacked = attack(range, other, 500, 3)
+    otherAttacked.health should be(Alive(500))
+  }
+
 }

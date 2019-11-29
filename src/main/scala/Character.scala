@@ -1,8 +1,10 @@
-trait Character{
+trait Character {
   val health: Health
   val level: Int
 }
+
 case class MeleeCharacter(health: Health = Health(1000), level: Int = 1) extends Character
+
 case class RangedCharacter(health: Health = Health(1000), level: Int = 1) extends Character
 
 object Character {
@@ -19,8 +21,14 @@ object Character {
     if (attacker == receiver) {
       attacker
     } else {
-      val newDamage = recalculateDamage(attacker, receiver, damage)
-      Character.copyWithHealth(receiver, recalculateHealth(receiver, newDamage, _ - _))
+      attacker match {
+        case _: MeleeCharacter if (distance > 2) => receiver
+        case _: RangedCharacter if (distance > 20) => receiver
+        case _ => {
+          val newDamage = recalculateDamage(attacker, receiver, damage)
+          Character.copyWithHealth(receiver, recalculateHealth(receiver, newDamage, _ - _))
+        }
+      }
     }
   }
 
@@ -29,9 +37,9 @@ object Character {
 
     val greaterAttacker = levelDiff >= DamageThreshold
     val lowerAttacker = levelDiff <= -DamageThreshold
-    (greaterAttacker, lowerAttacker) match  {
-      case (true, _) =>  damage * 1.5
-      case (_, true) =>  damage / 2
+    (greaterAttacker, lowerAttacker) match {
+      case (true, _) => damage * 1.5
+      case (_, true) => damage / 2
       case _ => damage
     }
   }
