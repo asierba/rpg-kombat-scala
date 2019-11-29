@@ -66,6 +66,13 @@ class RpgSpec extends FlatSpec with Matchers {
     damagedJuanma should be(juanma)
   }
 
+  it should "when melee juanma tries to damage  melee lulu, lulu is damaged" in {
+    val juanma = MeleeCharacter(name = "juanma")
+    val lulu = MeleeCharacter(name = "lulu")
+    val damagedLulu = attack(juanma, lulu, 2, 0)
+    damagedLulu should be(MeleeCharacter(Alive(998), name = "lulu"))
+  }
+
   it should "when juanma tries to heal himself, its health increases" in {
     val juanma = MeleeCharacter(Alive(700))
     val healedJuanma = heal(juanma, juanma, 10)

@@ -1,11 +1,12 @@
 trait Character {
   val health: Health
   val level: Int
+  val name: String
 }
 
-case class MeleeCharacter(health: Health = Health(1000), level: Int = 1) extends Character
+case class MeleeCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Melee Warrior") extends Character
 
-case class RangedCharacter(health: Health = Health(1000), level: Int = 1) extends Character
+case class RangedCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Ranged Warrior") extends Character
 
 object Character {
   val DamageThreshold = 5
