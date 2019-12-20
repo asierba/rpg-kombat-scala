@@ -121,4 +121,34 @@ class RpgSpec extends FlatSpec with Matchers {
     otherAttacked.health should be(Alive(500))
   }
 
+  it should " have no faction when created a Melee character" in {
+    val newCharacter = MeleeCharacter()
+
+    newCharacter.factions should be (Set())
+  }
+
+  it should " have no faction when created a Ranged character" in {
+    val newCharacter = RangedCharacter()
+
+    newCharacter.factions should be (Set())
+  }
+
+
+  it should "be able to join multiple factions for Melee character" in {
+    val twFaction = Faction("TW")
+    val newCharacter = MeleeCharacter(factions = Set(twFaction))
+    val packlinkFaction = Faction("PACKLINK")
+    val expectedCharacter = MeleeCharacter(factions = Set(twFaction, packlinkFaction))
+
+    joinFaction(newCharacter, packlinkFaction) should be (expectedCharacter)
+  }
+
+  it should "be able to join multiple factions for Ranged characters" in {
+    val twFaction = Faction("TW")
+    val newCharacter = RangedCharacter(factions = Set(twFaction))
+    val packlinkFaction = Faction("PACKLINK")
+    val expectedCharacter = RangedCharacter(factions = Set(twFaction, packlinkFaction))
+
+    joinFaction(newCharacter, packlinkFaction) should be (expectedCharacter)
+  }
 }

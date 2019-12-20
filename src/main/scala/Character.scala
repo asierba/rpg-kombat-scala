@@ -1,12 +1,14 @@
+case class Faction(name: String)
+
 trait Character {
   val health: Health
   val level: Int
   val name: String
 }
 
-case class MeleeCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Melee Warrior") extends Character
+case class MeleeCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Melee Warrior", factions: Set[Faction] = Set()) extends Character
 
-case class RangedCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Ranged Warrior") extends Character
+case class RangedCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Ranged Warrior", factions: Set[Faction] = Set()) extends Character
 
 object Character {
   val DamageThreshold = 5
@@ -62,4 +64,12 @@ object Character {
     }
     healthAfterHeal
   }
+
+  def joinFaction(character: Character, faction: Faction): Character = {
+    character match {
+      case x: MeleeCharacter => x.copy(factions = x.factions + faction)
+      case x: RangedCharacter => x.copy(factions = x.factions + faction)
+    }
+  }
 }
+
