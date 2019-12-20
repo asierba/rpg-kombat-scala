@@ -4,6 +4,14 @@ trait Character {
   val health: Health
   val level: Int
   val name: String
+  val factions: Set[Faction]
+
+  def copy(health: Health = this.health, level: Int = this.level, name: String = this.name, factions: Set[Faction] = this.factions): Character = {
+    this match {
+      case _: MeleeCharacter => MeleeCharacter(health, level, name, factions)
+      case _: RangedCharacter => RangedCharacter(health, level, name, factions)
+    }
+  }
 }
 
 case class MeleeCharacter(health: Health = Health(1000), level: Int = 1, name: String = "Melee Warrior", factions: Set[Faction] = Set()) extends Character
@@ -12,13 +20,6 @@ case class RangedCharacter(health: Health = Health(1000), level: Int = 1, name: 
 
 object Character {
   val DamageThreshold = 5
-
-  def copyWithHealth(character: Character, newHealth: Health): Character = {
-    character match {
-      case x: MeleeCharacter => x.copy(health = newHealth)
-      case x: RangedCharacter => x.copy(health = newHealth)
-    }
-  }
 
   def attack(attacker: Character, receiver: Character, damage: Int, distance: Int) = {
     if (attacker == receiver) {
@@ -29,7 +30,7 @@ object Character {
         case _: RangedCharacter if (distance > 20) => receiver
         case _ => {
           val newDamage = recalculateDamage(attacker, receiver, damage)
-          Character.copyWithHealth(receiver, recalculateHealth(receiver, newDamage, _ - _))
+          receiver.copy(health = recalculateHealth(receiver, newDamage, _ - _))
         }
       }
     }
@@ -37,7 +38,6 @@ object Character {
 
   private def recalculateDamage(attacker: Character, receiver: Character, damage: Int): Double = {
     val levelDiff = attacker.level - receiver.level
-
     val greaterAttacker = levelDiff >= DamageThreshold
     val lowerAttacker = levelDiff <= -DamageThreshold
     (greaterAttacker, lowerAttacker) match {
@@ -49,7 +49,7 @@ object Character {
 
   def heal(from: Character, to: Character, health: Int): Character = {
     if (from == to) {
-      Character.copyWithHealth(to, recalculateHealth(to, health, _ + _))
+      to.copy(health = recalculateHealth(to, health, _ + _))
     } else {
       to
     }
@@ -58,18 +58,13 @@ object Character {
   private def recalculateHealth(to: Character,
                                 health: Double,
                                 f: (Double, Double) => Double) = {
-    val healthAfterHeal = to.health match {
+    to.health match {
       case Alive(x) => Health(f(x, health))
       case Dead() => Dead()
     }
-    healthAfterHeal
   }
 
-  def joinFaction(character: Character, faction: Faction): Character = {
-    character match {
-      case x: MeleeCharacter => x.copy(factions = x.factions + faction)
-      case x: RangedCharacter => x.copy(factions = x.factions + faction)
-    }
-  }
+  def joinFaction(character: Character, faction: Faction): Character =
+    character.copy(factions = character.factions + faction)
 }
 
